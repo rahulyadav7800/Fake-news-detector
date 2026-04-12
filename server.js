@@ -94,5 +94,5 @@ app.get("*", (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`\n🛡️ Fake News Detector running at http://localhost:${PORT}`);
-  console.log(`🚀 OpenRouter API: ${process.env.OPENROUTER_API_KEY ? "✅ Set" : "❌ Not Set"}\n`);
+  console.log("🚀 OpenRouter API: Configured");
 });
