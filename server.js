@@ -4,6 +4,13 @@ const path = require("path");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+app.set('trust proxy', 1);
+const rateLimit = require("express-rate-limit");
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 500,
+});
 
 // Middleware
 app.use(express.json());
