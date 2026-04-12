@@ -11,7 +11,6 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // POST /analyze - Analyze news text using OpenRouter
 app.post("/analyze", async (req, res) => {
-  console.log("OPENROUTER KEY:", process.env.OPENROUTER_API_KEY);
 
   const { text } = req.body;
 
