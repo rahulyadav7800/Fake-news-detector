@@ -142,6 +142,17 @@ body {
   background: linear-gradient(90deg, transparent, var(--accent), transparent);
   opacity: 0.6;
 }
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at top,
+    rgba(91,107,255,0.12),
+    transparent 60%
+  );
+  pointer-events: none;
+}
 
 .card-header {
   display: flex;
