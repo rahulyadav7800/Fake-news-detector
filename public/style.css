@@ -94,25 +94,59 @@ body {
   animation: fadeDown 0.5s ease both;
 }
 
+/* Logo container */
 .logo-mark {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   margin-bottom: 8px;
 }
 
+/* Icon box */
 .logo-icon {
-  font-size: 1.4rem;
-  color: var(--accent);
-  filter: drop-shadow(0 0 8px var(--accent-glow));
-  animation: pulse 3s ease-in-out infinite;
+  width: 36px;
+  height: 36px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+  font-size: 1.2rem;
+
+  background: linear-gradient(135deg, #5b6bff, #7f8cff);
+  color: #fff;
+
+  box-shadow:
+    0 0 12px rgba(91,107,255,0.5),
+    0 0 20px rgba(127,140,255,0.4);
+
+  animation: logoPulse 2.5s infinite ease-in-out;
 }
 
+/* Text */
 .logo-text {
   font-family: var(--font-display);
-  font-size: 2.4rem;
+  font-size: 2.2rem;
   letter-spacing: 0.12em;
-  color: var(--text-primary);
+
+  background: linear-gradient(90deg, #ffffff, #aab4ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Glow animation */
+@keyframes logoPulse {
+  0%, 100% {
+    box-shadow:
+      0 0 12px rgba(91,107,255,0.4),
+      0 0 20px rgba(127,140,255,0.3);
+  }
+  50% {
+    box-shadow:
+      0 0 20px rgba(91,107,255,0.7),
+      0 0 30px rgba(127,140,255,0.5);
+  }
 }
 
 .tagline {
