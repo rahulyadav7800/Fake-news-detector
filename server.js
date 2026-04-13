@@ -1,22 +1,30 @@
 require('dotenv').config();
+
 const express = require("express");
 const path = require("path");
+const rateLimit = require("express-rate-limit");
+
+// 👇 fetch fix (important)
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-app.set('trust proxy', 1);
-const rateLimit = require("express-rate-limit");
 
+// trust proxy (Render ke liye useful)
+app.set('trust proxy', 1);
+
+// 🔥 Rate limiter apply
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 500,
 });
+app.use(limiter);
 
 // Middleware
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
-// POST /analyze - Analyze news text using OpenRouter
+// POST /analyze
 app.post("/analyze", async (req, res) => {
 
   const { text } = req.body;
@@ -42,7 +50,7 @@ Respond ONLY with a valid JSON object. No markdown, no explanation outside the J
   "real_probability": <number 0-100>,
   "fake_probability": <number 0-100>,
   "misleading_probability": <number 0-100>,
-  "reason": "<clear 2-4 sentence explanation of your analysis>"
+  "reason": "<clear 2-4 sentence explanation>"
 }`;
 
   try {
@@ -55,23 +63,31 @@ Respond ONLY with a valid JSON object. No markdown, no explanation outside the J
       body: JSON.stringify({
         model: "mistralai/mixtral-8x7b-instruct",
         messages: [
-          {
-            role: "user",
-            content: prompt
-          }
+          { role: "user", content: prompt }
         ]
       })
     });
 
+    // API error handle
     if (!response.ok) {
-      const errData = await response.json().catch(() => ({}));
-      console.error("OpenRouter API error:", errData);
+      const textData = await response.text();
+      console.error("API Error:", textData);
       return res.status(502).json({
-        error: "Failed to reach AI service.",
+        error: "Failed to reach AI service."
       });
     }
 
-    const data = await response.json();
+    const textData = await response.text();
+
+    let data;
+    try {
+      data = JSON.parse(textData);
+    } catch {
+      console.error("Invalid JSON from API:", textData);
+      return res.status(500).json({
+        error: "AI returned invalid format."
+      });
+    }
 
     const rawText = data?.choices?.[0]?.message?.content || "";
 
@@ -80,9 +96,9 @@ Respond ONLY with a valid JSON object. No markdown, no explanation outside the J
       const cleaned = rawText.replace(/```json|```/gi, "").trim();
       parsed = JSON.parse(cleaned);
     } catch {
-      console.error("JSON parse failed. Raw response:", rawText);
+      console.error("Final parse failed:", rawText);
       return res.status(500).json({
-        error: "AI returned invalid format.",
+        error: "AI response parsing failed."
       });
     }
 
@@ -94,12 +110,13 @@ Respond ONLY with a valid JSON object. No markdown, no explanation outside the J
   }
 });
 
-// Serve frontend
+// Frontend serve
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
+// Start server
 app.listen(PORT, () => {
-  console.log(`\n🛡️ Fake News Detector running at http://localhost:${PORT}`);
-  console.log("🚀 OpenRouter API: Configured");
+  console.log(`🛡️ Server running on port ${PORT}`);
+  console.log("🚀 OpenRouter API ready");
 });
