@@ -226,8 +226,17 @@ body {
 }
 
 .news-textarea:focus {
-  border-color: var(--border-focus);
-  box-shadow: 0 0 0 3px var(--accent-dim);
+  border: 1px solid #5b6bff;
+  animation: glowPulse 1.5s infinite alternate;
+}
+
+@keyframes glowPulse {
+  from {
+    box-shadow: 0 0 5px #5b6bff;
+  }
+  to {
+    box-shadow: 0 0 20px #7f8cff;
+  }
 }
 
 .textarea-footer {
