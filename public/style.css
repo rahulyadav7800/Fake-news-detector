@@ -323,55 +323,103 @@ body {
   align-items: center;
   justify-content: center;
   gap: 10px;
-  background: var(--accent);
+
+  background: linear-gradient(135deg, #5b6bff, #7f8cff, #9aa7ff);
+  background-size: 200% 200%;
+
   color: #fff;
   border: none;
   border-radius: var(--radius-md);
+
   padding: 15px 24px;
   font-family: var(--font-display);
   font-size: 1.15rem;
   letter-spacing: 0.1em;
+
   cursor: pointer;
-  transition: transform var(--transition), box-shadow var(--transition), background var(--transition), opacity var(--transition);
   position: relative;
   overflow: hidden;
+
+  transition: all var(--transition);
 }
 
+/* ✨ Shine effect */
 .analyze-btn::before {
-  content: '';
+  content: "";
   position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255,255,255,0.4),
+    transparent
+  );
+
+  transition: 0.5s;
 }
 
+/* 🔥 Hover effect */
 .analyze-btn:hover:not(:disabled) {
+  background-position: 100% 0;
   transform: translateY(-2px);
-  box-shadow: 0 8px 28px rgba(91,107,255,0.4);
+
+  box-shadow:
+    0 12px 35px rgba(91,107,255,0.5),
+    0 0 20px rgba(127,140,255,0.4);
 }
 
+/* 🌊 Shine animation trigger */
+.analyze-btn:hover::before {
+  left: 100%;
+}
+
+/* ⚡ Click feel */
 .analyze-btn:active:not(:disabled) {
-  transform: translateY(0);
+  transform: scale(0.97);
 }
 
+/* ⛔ Disabled state */
 .analyze-btn:disabled {
-  opacity: 0.65;
+  opacity: 0.7;
   cursor: not-allowed;
 }
 
-.btn-icon { font-size: 1.1rem; }
+/* 🔘 Icon */
+.btn-icon {
+  font-size: 1.1rem;
+}
 
+/* ⏳ Loader */
 .btn-loader {
   display: none;
-  width: 18px; height: 18px;
+  width: 18px;
+  height: 18px;
   border: 2px solid rgba(255,255,255,0.3);
   border-top-color: #fff;
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
 }
 
-.analyze-btn.loading .btn-text { display: none; }
-.analyze-btn.loading .btn-icon { display: none; }
-.analyze-btn.loading .btn-loader { display: block; }
+/* 🔄 Loading state */
+.analyze-btn.loading {
+  cursor: not-allowed;
+}
+
+.analyze-btn.loading .btn-text {
+  display: none;
+}
+
+.analyze-btn.loading .btn-icon {
+  display: none;
+}
+
+.analyze-btn.loading .btn-loader {
+  display: block;
+}
 
 /* ── Error Box ── */
 .error-box {
