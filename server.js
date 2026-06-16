@@ -143,6 +143,7 @@ Return ONLY valid JSON:
 				.trim();
 
 			parsed = JSON.parse(cleaned);
+			console.log(parsed);
 		} catch {
 			console.error("Final parse failed:", rawText);
 
