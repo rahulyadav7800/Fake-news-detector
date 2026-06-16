@@ -84,6 +84,12 @@ Instructions:
 - If the headlines mention that the event has not happened yet, classify as Fake.
 - If headlines only discuss future matches, do not assume the claim is true.
 - If no headline explicitly confirms the claim, classify as Fake.
+- Ignore unrelated headlines.
+- Do not infer facts from partial matches.
+- Extraordinary claims without direct evidence must be classified as Fake.
+- Return ONLY JSON.
+- Never add explanations outside JSON.
+- Never change your answer after producing JSON.
 - Never invent facts.
 
 Return ONLY valid JSON:
@@ -138,11 +144,46 @@ Return ONLY valid JSON:
 		let parsed;
 
 		try {
-			const cleaned = rawText
-				.replace(/```json|```/gi, "")
-				.trim();
+			const match = rawText.match(/\{[\s\S]*\}/);
 
-			parsed = JSON.parse(cleaned);
+if (!match) {
+	throw new Error("No JSON found");
+}
+
+parsed = JSON.parse(match[0]);
+			let total =
+	Number(parsed.real_probability) +
+	Number(parsed.fake_probability) +
+	Number(parsed.misleading_probability);
+
+if (total === 1) {
+	parsed.real_probability *= 100;
+	parsed.fake_probability *= 100;
+	parsed.misleading_probability *= 100;
+	total = 100;
+}
+
+if (total === 0) {
+	switch (parsed.verdict) {
+
+		case "Real":
+			parsed.real_probability = 100;
+			parsed.fake_probability = 0;
+			parsed.misleading_probability = 0;
+			break;
+
+		case "Fake":
+			parsed.real_probability = 0;
+			parsed.fake_probability = 100;
+			parsed.misleading_probability = 0;
+			break;
+
+		default:
+			parsed.real_probability = 0;
+			parsed.fake_probability = 0;
+			parsed.misleading_probability = 100;
+	}
+}
 			console.log(parsed);
 		} catch {
 			console.error("Final parse failed:", rawText);
