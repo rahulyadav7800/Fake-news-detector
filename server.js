@@ -13,7 +13,7 @@ async function fetchRelatedNews(query) {
 
 		const feed = await parser.parseURL(url);
 
-		return feed.items.slice(0, 3).map(item => ({
+		return feed.items.slice(0, 10).map(item => ({
 			title: item.title
 		}));
 	} catch (err) {
@@ -74,6 +74,9 @@ Instructions:
 - If most headlines support the claim, classify as Real.
 - If most headlines contradict the claim, classify as Fake.
 - If evidence is mixed or insufficient, classify as Misleading.
+- If the headlines mention that the event has not happened yet, classify as Fake.
+- If headlines only discuss future matches, do not assume the claim is true.
+- If no headline explicitly confirms the claim, classify as Fake.
 - Never invent facts.
 
 Return ONLY valid JSON:
