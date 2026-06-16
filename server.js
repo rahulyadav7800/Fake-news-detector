@@ -114,7 +114,7 @@ Return ONLY valid JSON:
 					"Content-Type": "application/json"
 				},
 				body: JSON.stringify({
-					model: "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
+					model: "openai/gpt-oss-20b:free",
 					messages: [
 						{
 							role: "user",
