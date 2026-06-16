@@ -52,13 +52,20 @@ app.post("/analyze", async (req, res) => {
 		});
 	}
 
+	let headlines = "No related headlines found.";
+
+try {
 	const relatedNews = await fetchRelatedNews(text);
 
-	const headlines = relatedNews.length > 0
+	headlines = relatedNews.length > 0
 		? relatedNews.map((item, index) =>
 			`${index + 1}. ${item.title}`
 		).join("\n")
 		: "No related headlines found.";
+
+} catch (err) {
+	console.log("Skipping RSS...");
+}
 
 	const prompt = `
 You are an expert fact checker.
@@ -101,7 +108,7 @@ Return ONLY valid JSON:
 					"Content-Type": "application/json"
 				},
 				body: JSON.stringify({
-					model: "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
+					model: "liquid/lfm-2.5-1.2b-thinking:free",
 					messages: [
 						{
 							role: "user",
