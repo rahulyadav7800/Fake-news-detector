@@ -101,7 +101,7 @@ Return ONLY valid JSON:
 					"Content-Type": "application/json"
 				},
 				body: JSON.stringify({
-					model: "nex-agi/nex-n2-pro:free",
+					model: "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
 					messages: [
 						{
 							role: "user",
