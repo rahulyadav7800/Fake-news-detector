@@ -7,10 +7,6 @@ const Parser = require("rss-parser");
 
 const parser = new Parser();
 
-// fetch fix
-const fetch = (...args) =>
-	import('node-fetch').then(({ default: fetch }) => fetch(...args));
-
 async function fetchRelatedNews(query) {
 	try {
 		const url = `https://news.google.com/rss/search?q=${encodeURIComponent(query)}&hl=en-IN&gl=IN&ceid=IN:en`;
