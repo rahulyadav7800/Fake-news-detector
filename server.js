@@ -21,6 +21,41 @@ async function fetchRSSNews(query) {
 		return [];
 	}
 }
+
+async function fetchWikipedia(query) {
+
+	try {
+
+		const response = await fetch(
+			`https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(query)}&format=json`
+		);
+
+		const data = await response.json();
+
+		if (
+			data.query &&
+			data.query.search &&
+			data.query.search.length > 0
+		) {
+
+			console.log("Using Wikipedia");
+
+			return data.query.search.slice(0, 3).map(item => ({
+				title: item.title,
+				description: item.snippet
+			}));
+		}
+
+		return [];
+
+	} catch (err) {
+
+		console.log("Wikipedia failed");
+
+		return [];
+	}
+}
+
 async function fetchRelatedNews(query) {
 
 	try {
@@ -34,9 +69,16 @@ async function fetchRelatedNews(query) {
 		// API limit khatam ho gayi ya koi error aaya
 		if (data.status === "error") {
 
-			console.log("NewsData API failed. Switching to RSS...");
-			return await fetchRSSNews(query);
-		}
+	console.log("NewsData API failed. Switching to RSS...");
+
+	const rssNews = await fetchRSSNews(query);
+
+	if (rssNews.length > 0) {
+		return rssNews;
+	}
+
+	return await fetchWikipedia(query);
+}
 
 		// Results mil gaye
 		if (data.results && data.results.length > 0) {
@@ -52,13 +94,25 @@ async function fetchRelatedNews(query) {
 		// Results empty hain
 		console.log("No NewsData results. Switching to RSS...");
 
-		return await fetchRSSNews(query);
+		const rssNews = await fetchRSSNews(query);
+
+if (rssNews.length > 0) {
+	return rssNews;
+}
+
+return await fetchWikipedia(query);
 
 	} catch (err) {
 
 		console.log("NewsData error. Switching to RSS...");
 
-		return await fetchRSSNews(query);
+		const rssNews = await fetchRSSNews(query);
+
+if (rssNews.length > 0) {
+	return rssNews;
+}
+
+return await fetchWikipedia(query);
 	}
 }
 
