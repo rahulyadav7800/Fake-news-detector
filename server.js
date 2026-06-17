@@ -138,6 +138,11 @@ Instructions:
 - If headlines only discuss future matches, do not assume the claim is true.
 - If no headline explicitly confirms the claim, classify as Fake.
 - Ignore unrelated headlines.
+- Headlines are only supporting evidence.
+- If headlines are unrelated to the claim, ignore them completely.
+- Use your own world knowledge for well-known historical events.
+- Historical events that are widely known should not require current news headlines.
+- Do not treat absence of headlines as proof that a claim is false.
 - Pay close attention to dates and timelines.
 - If the claim refers to a past event, do not interpret it as a future event.
 - If headlines mention upcoming matches while the claim states that the event already happened, treat this as contradictory evidence.
