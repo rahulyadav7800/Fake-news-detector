@@ -142,7 +142,6 @@ Instructions:
 - If evidence is mixed or insufficient, classify as Misleading.
 - If the headlines mention that the event has not happened yet, classify as Fake.
 - If headlines only discuss future matches, do not assume the claim is true.
-- If no headline explicitly confirms the claim, classify as Fake.
 - Ignore unrelated headlines.
 - Headlines are only supporting evidence.
 - If headlines are unrelated to the claim, ignore them completely.
