@@ -108,6 +108,8 @@ try {
 }
 
 	const prompt = `
+Current year is 2026.
+Today's date is June 2026.
 You are an expert fact checker.
 
 Claim:
@@ -124,12 +126,25 @@ Instructions:
 - The three probabilities must add up to exactly 100.
 - Compare the claim with the headlines.
 - If most headlines support the claim, classify as Real.
-- If most headlines contradict the claim, classify as Fake.
+- Headlines do not need to match the claim word-for-word.
+- If a headline conveys approximately the same meaning (around 80-90% semantic similarity), treat it as supporting evidence.
+- Focus on entities, dates, events, and outcomes rather than exact wording.
+- Ignore minor wording differences.
+- If headlines partially support and partially contradict the claim, classify as Misleading.
+- Unrelated headlines should be ignored completely.
+- If no useful headlines are found, use your own general knowledge and reasoning.
 - If evidence is mixed or insufficient, classify as Misleading.
 - If the headlines mention that the event has not happened yet, classify as Fake.
 - If headlines only discuss future matches, do not assume the claim is true.
 - If no headline explicitly confirms the claim, classify as Fake.
 - Ignore unrelated headlines.
+- Pay close attention to dates and timelines.
+- If the claim refers to a past event, do not interpret it as a future event.
+- If headlines mention upcoming matches while the claim states that the event already happened, treat this as contradictory evidence.
+- Distinguish between "will happen", "is scheduled", and "has already happened".
+- Never convert completed events into future events.
+- Consider the year mentioned in the claim when evaluating evidence.
+- If the claim contains a year earlier than the current year, assume the event is historical unless evidence indicates otherwise.
 - Do not infer facts from partial matches.
 - Extraordinary claims without direct evidence must be classified as Fake.
 - Return ONLY JSON.
