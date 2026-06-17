@@ -77,6 +77,11 @@ Recent related headlines:
 ${headlines}
 
 Instructions:
+- Use headlines as primary evidence when available.
+- If no headlines are available, use your own general knowledge.
+- Do not invent recent events.
+- If uncertain, classify as Misleading.
+- The three probabilities must add up to exactly 100.
 - Compare the claim with the headlines.
 - If most headlines support the claim, classify as Real.
 - If most headlines contradict the claim, classify as Fake.
@@ -96,9 +101,9 @@ Return ONLY valid JSON:
 
 {
 	"verdict": "Real" | "Fake" | "Misleading",
-	"real_probability": 0,
-	"fake_probability": 0,
-	"misleading_probability": 0,
+	"real_probability": 0-100,
+	"fake_probability": 0-100,
+	"misleading_probability": 0-100
 	"reason": ""
 }
 `;
@@ -151,19 +156,36 @@ if (!match) {
 }
 
 parsed = JSON.parse(match[0]);
-			let total =
+
+let total =
 	Number(parsed.real_probability) +
 	Number(parsed.fake_probability) +
 	Number(parsed.misleading_probability);
 
-if (total === 1) {
-	parsed.real_probability *= 100;
-	parsed.fake_probability *= 100;
-	parsed.misleading_probability *= 100;
-	total = 100;
+// Agar model ne 0.5, 0.3, 0.2 diya ho
+if (total > 0) {
+
+	parsed.real_probability = Math.round(
+		(Number(parsed.real_probability) / total) * 100
+	);
+
+	parsed.fake_probability = Math.round(
+		(Number(parsed.fake_probability) / total) * 100
+	);
+
+	parsed.misleading_probability =
+		100 -
+		parsed.real_probability -
+		parsed.fake_probability;
 }
 
-if (total === 0) {
+// Agar model ne teeno 0 diye ho
+if (
+	parsed.real_probability === 0 &&
+	parsed.fake_probability === 0 &&
+	parsed.misleading_probability === 0
+) {
+
 	switch (parsed.verdict) {
 
 		case "Real":
@@ -184,7 +206,15 @@ if (total === 0) {
 			parsed.misleading_probability = 100;
 	}
 }
-			console.log(parsed);
+
+// Confidence score
+parsed.confidence = Math.max(
+	parsed.real_probability,
+	parsed.fake_probability,
+	parsed.misleading_probability
+);
+
+console.log(parsed);
 		} catch {
 			console.error("Final parse failed:", rawText);
 
