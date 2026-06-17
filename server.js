@@ -142,8 +142,7 @@ Instructions:
 - If headlines are unrelated to the claim, ignore them completely.
 - Use your own world knowledge for well-known historical events.
 - Use your own knowledge only when the claim concerns scientific facts, geography, or universally established information.
-- For sports results, elections, awards, and recent historical events, rely primarily on external evidence.
-- If evidence is missing, classify as Misleading rather than guessing.
+- For sports results, elections, awards, and recent historical events, rely primarily on external evidence but in case of lack of evidence use your own knowledge.
 - Do not treat absence of headlines as proof that a claim is false.
 - Pay close attention to dates and timelines.
 - If the claim refers to a past event, do not interpret it as a future event.
