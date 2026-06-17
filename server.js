@@ -7,7 +7,7 @@ const Parser = require("rss-parser");
 
 const parser = new Parser();
 
-async function fetchRelatedNews(query) {
+async function fetchRSSNews(query) {
 	try {
 		const url = `https://news.google.com/rss/search?q=${encodeURIComponent(query)}&hl=en-IN&gl=IN&ceid=IN:en`;
 
@@ -19,6 +19,46 @@ async function fetchRelatedNews(query) {
 	} catch (err) {
 		console.error("RSS Error:", err);
 		return [];
+	}
+}
+async function fetchRelatedNews(query) {
+
+	try {
+
+		const response = await fetch(
+			`https://newsdata.io/api/1/news?apikey=${process.env.NEWSDATA_API_KEY}&q=${encodeURIComponent(query)}`
+		);
+
+		const data = await response.json();
+
+		// API limit khatam ho gayi ya koi error aaya
+		if (data.status === "error") {
+
+			console.log("NewsData API failed. Switching to RSS...");
+			return await fetchRSSNews(query);
+		}
+
+		// Results mil gaye
+		if (data.results && data.results.length > 0) {
+
+			console.log("Using NewsData API");
+			console.log(data.results[0]?.title);
+
+			return data.results.slice(0, 5).map(item => ({
+				title: item.title
+			}));
+		}
+
+		// Results empty hain
+		console.log("No NewsData results. Switching to RSS...");
+
+		return await fetchRSSNews(query);
+
+	} catch (err) {
+
+		console.log("NewsData error. Switching to RSS...");
+
+		return await fetchRSSNews(query);
 	}
 }
 
