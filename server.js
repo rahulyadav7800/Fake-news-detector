@@ -119,6 +119,12 @@ Recent related headlines:
 ${headlines}
 
 Instructions:
+- Headlines may belong to different years than the claim.
+- Give highest priority to headlines whose year matches the year mentioned in the claim.
+- Ignore headlines from other years if they refer to different tournaments or future events.
+- Lack of matching headlines is NOT proof that a claim is false.
+- Historical sports results may be verified using general knowledge if no matching headlines are found.
+- Do not assume a past event is false simply because only recent headlines are available.
 - Use headlines as primary evidence when available.
 - If no headlines are available, use your own general knowledge.
 - Do not invent recent events.
