@@ -490,6 +490,21 @@ body {
   line-height: 1.75;
   color: var(--text-primary);
 }
+/* ── Source Box ── */
+
+.source-box {
+	background: var(--bg-reason);
+	border: 1px solid var(--border);
+	border-radius: var(--radius-md);
+	padding: 18px 20px;
+	margin-bottom: 20px;
+}
+
+.source-text {
+	font-size: 0.9rem;
+	line-height: 1.7;
+	color: var(--text-primary);
+}
 
 /* ── Confidence Meter ── */
 .confidence-row {
