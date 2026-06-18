@@ -18,6 +18,7 @@ const fakeBar        = document.getElementById("fakeBar");
 const misleadBar     = document.getElementById("misleadBar");
 const reasonText     = document.getElementById("reasonText");
 const confidenceMeter = document.getElementById("confidenceMeter");
+const btnText = document.querySelector(".btn-text");
 
 // ── Character Counter ──
 newsInput.addEventListener("input", () => {
@@ -88,7 +89,7 @@ async function analyzeNews() {
 
   } catch (err) {
     console.error("Fetch error:", err);
-    showError("❌ Could not reach the server. Make sure the backend is running.");
+    showError("❌ Unable to analyze the claim right now. Please try again.");
   } finally {
     setLoading(false);
   }
@@ -106,9 +107,20 @@ function renderResults(data) {
   const verdictNorm = (verdict || "").toLowerCase().trim();
   verdictBadge.textContent = verdict || "Unknown";
   verdictBadge.className = "verdict-badge";
-  if (verdictNorm === "real") verdictBadge.classList.add("verdict-real");
-  else if (verdictNorm === "fake") verdictBadge.classList.add("verdict-fake");
-  else verdictBadge.classList.add("verdict-misleading");
+  verdictBadge.className = "verdict-badge";
+
+if (verdictNorm === "real") {
+	verdictBadge.textContent = "✅ REAL";
+	verdictBadge.classList.add("verdict-real");
+}
+else if (verdictNorm === "fake") {
+	verdictBadge.textContent = "❌ FAKE";
+	verdictBadge.classList.add("verdict-fake");
+}
+else {
+	verdictBadge.textContent = "⚠️ MISLEADING";
+	verdictBadge.classList.add("verdict-misleading");
+}
 
   // ─ Probability Values ─
   realVal.textContent    = `${realP}%`;
@@ -130,7 +142,7 @@ function renderResults(data) {
   });
 
   // ─ Reason ─
-  reasonText.textContent = reason || "No reasoning provided.";
+  reasonText.textContent = reason || "No detailed explanation was returned.";
 
   // ─ Confidence Meter (pips) ─
   renderConfidencePips(realP, fakeP, misleadP);
@@ -173,7 +185,11 @@ function renderConfidencePips(real, fake, mislead) {
 function setLoading(isLoading) {
   analyzeBtn.disabled = isLoading;
   analyzeBtn.classList.toggle("loading", isLoading);
-}
+  if (isLoading)
+	  btnText.textContent = "Analyzing...";
+  else
+	  btnText.textContent = "Analyze Content";
+  }
 
 function showError(msg) {
   errorBox.textContent = msg;
