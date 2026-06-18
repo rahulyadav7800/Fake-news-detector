@@ -86,9 +86,12 @@ async function fetchRelatedNews(query) {
 			console.log("Using NewsData API");
 			console.log(data.results[0]?.title);
 
-			return data.results.slice(0, 5).map(item => ({
-				title: item.title
-			}));
+			return {
+	source: "NewsData",
+	news: data.results.slice(0, 5).map(item => ({
+		title: item.title
+	}))
+};
 		}
 
 		// Results empty hain
@@ -97,10 +100,16 @@ async function fetchRelatedNews(query) {
 		const rssNews = await fetchRSSNews(query);
 
 if (rssNews.length > 0) {
-	return rssNews;
+	return {
+	source: "GOOGLE RSS",
+	news: rssNews
+};
 }
 
-return await fetchWikipedia(query);
+return {
+	source: "Wikipedia",
+	news: await fetchWikipedia(query)
+};
 
 	} catch (err) {
 
@@ -150,7 +159,11 @@ app.post("/analyze", async (req, res) => {
 	let source = "AI Reasoning Only";
 
 try {
-	const relatedNews = await fetchRelatedNews(text);
+	const result = await fetchRelatedNews(text);
+
+source = result.source;
+
+const relatedNews = result.news;
 if (relatedNews.length > 0) {
 	source = "NewsData / RSS / Wikipedia";
 }
