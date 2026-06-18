@@ -147,9 +147,15 @@ app.post("/analyze", async (req, res) => {
 	}
 
 	let headlines = "No related headlines found.";
+	let source = "AI Reasoning Only";
 
 try {
 	const relatedNews = await fetchRelatedNews(text);
+if (relatedNews.length > 0) {
+	source = "NewsData / RSS / Wikipedia";
+}
+
+headlines = relatedNews.length > 0
 
 	headlines = relatedNews.length > 0
 		? relatedNews.map((item, index) =>
@@ -326,6 +332,7 @@ if (
 			parsed.misleading_probability = 100;
 	}
 }
+parsed.source = source;
 
 // Confidence score
 parsed.confidence = Math.max(
