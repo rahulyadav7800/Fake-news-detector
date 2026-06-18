@@ -18,6 +18,7 @@ const fakeBar        = document.getElementById("fakeBar");
 const misleadBar     = document.getElementById("misleadBar");
 const reasonText     = document.getElementById("reasonText");
 const confidenceMeter = document.getElementById("confidenceMeter");
+const sourceText = document.getElementById("sourceText");
 const btnText = document.querySelector(".btn-text");
 
 // ── Character Counter ──
@@ -97,7 +98,14 @@ async function analyzeNews() {
 
 // ── Render Results ──
 function renderResults(data) {
-  const { verdict, real_probability, fake_probability, misleading_probability, reason } = data;
+const {
+	verdict,
+	real_probability,
+	fake_probability,
+	misleading_probability,
+	reason,
+	source
+} = data;
 
   const realP    = Number(real_probability)    || 0;
   const fakeP    = Number(fake_probability)    || 0;
@@ -143,6 +151,8 @@ else {
 
   // ─ Reason ─
   reasonText.textContent = reason || "No detailed explanation was returned.";
+
+sourceText.textContent = source || "AI Reasoning Only";
 
   // ─ Confidence Meter (pips) ─
   renderConfidencePips(realP, fakeP, misleadP);
