@@ -573,3 +573,21 @@ body {
   .card-header { flex-direction: column; align-items: flex-start; gap: 10px; }
   .results-header { flex-direction: column; align-items: flex-start; gap: 12px; }
 }
+/* ── Scrollbar ── */
+
+::-webkit-scrollbar {
+	width: 8px;
+}
+
+::-webkit-scrollbar-track {
+	background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+	background: var(--border-focus);
+	border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: var(--accent);
+}
