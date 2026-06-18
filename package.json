@@ -1,7 +1,7 @@
 {
   "name": "truthlens-fake-news-detector",
   "version": "1.0.0",
-  "description": "AI-powered fake news detection using Google Gemini API",
+  "description": "AI-powered fake news detector",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
