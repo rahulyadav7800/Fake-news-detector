@@ -13,12 +13,18 @@ async function fetchRSSNews(query) {
 
 		const feed = await parser.parseURL(url);
 
-		return feed.items.slice(0, 10).map(item => ({
-			title: item.title
-		}));
+		return {
+	source: "GOOGLE RSS",
+	news: feed.items.slice(0, 10).map(item => ({
+		title: item.title
+	}))
+};
 	} catch (err) {
 		console.error("RSS Error:", err);
-		return [];
+		return {
+	source: "AI Reasoning Only",
+	news: []
+};
 	}
 }
 
@@ -40,19 +46,28 @@ async function fetchWikipedia(query) {
 
 			console.log("Using Wikipedia");
 
-			return data.query.search.slice(0, 3).map(item => ({
-				title: item.title,
-				description: item.snippet
-			}));
+			return {
+	source: "Wikipedia",
+	news: data.query.search.slice(0, 3).map(item => ({
+		title: item.title,
+		description: item.snippet
+	}))
+};
 		}
 
-		return [];
+		return {
+	source: "AI Reasoning Only",
+	news: []
+};
 
 	} catch (err) {
 
 		console.log("Wikipedia failed");
 
-		return [];
+		return {
+	source: "AI Reasoning Only",
+	news: []
+};
 	}
 }
 
@@ -73,7 +88,7 @@ async function fetchRelatedNews(query) {
 
 	const rssNews = await fetchRSSNews(query);
 
-	if (rssNews.length > 0) {
+	if (rssNews.news.length > 0) {
 		return rssNews;
 	}
 
@@ -99,17 +114,11 @@ async function fetchRelatedNews(query) {
 
 		const rssNews = await fetchRSSNews(query);
 
-if (rssNews.length > 0) {
-	return {
-	source: "GOOGLE RSS",
-	news: rssNews
-};
+if (rssNews.news.length > 0) {
+	return rssNews;
 }
 
-return {
-	source: "Wikipedia",
-	news: await fetchWikipedia(query)
-};
+return await fetchWikipedia(query);
 
 	} catch (err) {
 
@@ -117,7 +126,7 @@ return {
 
 		const rssNews = await fetchRSSNews(query);
 
-if (rssNews.length > 0) {
+if (rssNews.news.length > 0) {
 	return rssNews;
 }
 
@@ -149,7 +158,7 @@ app.post("/analyze", async (req, res) => {
 		});
 	}
 
-	if (text.trim().length < 20) {
+	if (text.trim().length < 15) {
 		return res.status(400).json({
 			error: "Text is too short. Please provide more content."
 		});
@@ -164,9 +173,6 @@ try {
 source = result.source;
 
 const relatedNews = result.news;
-if (relatedNews.length > 0) {
-	source = "NewsData / RSS / Wikipedia";
-}
 
 headlines = relatedNews.length > 0
 
